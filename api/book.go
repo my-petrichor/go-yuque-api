@@ -19,6 +19,9 @@ func GetUserBookList(token, login string) *ResponseBookSerializer {
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -47,6 +50,9 @@ func GetGroupBookList(token, groupLogin string) *ResponseBookSerializer {
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -78,6 +84,9 @@ func GetBookInfo(token, namespace string) *ResponseBookDetailSerializer {
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -86,7 +95,10 @@ func GetBookInfo(token, namespace string) *ResponseBookDetailSerializer {
 	}
 
 	book := ResponseBookDetailSerializer{}
-	json.Unmarshal(body, &book)
+	err = json.Unmarshal(body, &book)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	return &book
 }
@@ -103,9 +115,15 @@ func CreateUserBook(token, login, changeSlug, changeName string) *ResponseBookDe
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	book := ResponseBookDetailSerializer{}
 	err = json.Unmarshal(body, &book)
@@ -135,11 +153,16 @@ func CreateGrouprBook(token, login, changeSlug, changeName string, changePublic 
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
 
-	fmt.Println(string(body))
 	book := ResponseBookDetailSerializer{}
 	err = json.Unmarshal(body, &book)
 	if err != nil {
@@ -161,9 +184,15 @@ func UpdateBook(token, namespace, changeName, changeSlug string) *ResponseBookDe
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
 	book := ResponseBookDetailSerializer{}
 	err = json.Unmarshal(body, &book)
 	if err != nil {
@@ -185,9 +214,15 @@ func DeleteBook(token, namespace string) *ResponseBookDetailSerializer {
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	book := ResponseBookDetailSerializer{}
 	err = json.Unmarshal(body, &book)
@@ -211,9 +246,15 @@ func GetBookDirectoryStructure(token, namespace string) *ResponseBookDirectorySt
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	book := ResponseBookDirectoryStructure{}
 	err = json.Unmarshal(body, &book)
