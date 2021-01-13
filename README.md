@@ -1,5 +1,5 @@
 # go-yuque-api
-a SDK of yuque API written in go
+This library is designed as a simple wrapper around the YuQue API. It's encouraged to read YuQue's docs first to get a simple understanding. 
 
 ## examples
 ```
