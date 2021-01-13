@@ -35,12 +35,9 @@ func GetUserBookList(token, login string) *ResponseBookSerializer {
 	return &book
 }
 
-//todo:
-//Currently, it is not possible to obtain the team knowledge base list,
-//and the obtained result is the same as the user knowledge base list
-func GetGroupBookList(token, login string) *ResponseBookSerializer {
+func GetGroupBookList(token, groupLogin string) *ResponseBookSerializer {
 	client := http.DefaultClient
-	url := fmt.Sprintf("https://www.yuque.com/api/v2/groups/%s/repos", login)
+	url := fmt.Sprintf("https://www.yuque.com/api/v2/groups/%s/repos", groupLogin)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -94,9 +91,9 @@ func GetBookInfo(token, namespace string) *ResponseBookDetailSerializer {
 	return &book
 }
 
-func CreateUserBook(token, login, slug, name string) *ResponseBookDetailSerializer {
+func CreateUserBook(token, login, changeSlug, changeName string) *ResponseBookDetailSerializer {
 	client := http.DefaultClient
-	url := fmt.Sprintf("https://www.yuque.com/api/v2/users/%s/repos?slug=%s&name=%s", login, slug, name)
+	url := fmt.Sprintf("https://www.yuque.com/api/v2/users/%s/repos?slug=%s&name=%s", login, changeSlug, changeName)
 
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
@@ -126,9 +123,9 @@ func CreateUserBook(token, login, slug, name string) *ResponseBookDetailSerializ
 3  visible for everyone int space members
 4  visible for book members
 */
-func CreateGrouprBook(token, login, slug, name string, public int) *ResponseBookDetailSerializer {
+func CreateGrouprBook(token, login, changeSlug, changeName string, changePublic int) *ResponseBookDetailSerializer {
 	client := http.DefaultClient
-	url := fmt.Sprintf("https://www.yuque.com/api/v2/groups/%s/repos?slug=%s&name=%s&public=%d", login, slug, name, public)
+	url := fmt.Sprintf("https://www.yuque.com/api/v2/groups/%s/repos?slug=%s&name=%s&public=%d", login, changeSlug, changeName, changePublic)
 
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
@@ -152,9 +149,9 @@ func CreateGrouprBook(token, login, slug, name string, public int) *ResponseBook
 	return &book
 }
 
-func UpdateBook(token, namespace, name, slug string) *ResponseBookDetailSerializer {
+func UpdateBook(token, namespace, changeName, changeSlug string) *ResponseBookDetailSerializer {
 	client := http.DefaultClient
-	url := fmt.Sprintf("https://www.yuque.com/api/v2/repos/%s?name=%s&slug=%s", namespace, name, slug)
+	url := fmt.Sprintf("https://www.yuque.com/api/v2/repos/%s?name=%s&slug=%s", namespace, changeName, changeSlug)
 
 	req, err := http.NewRequest("PUT", url, nil)
 	if err != nil {
