@@ -19,6 +19,9 @@ func GetUserInfo(token string) *ResponseUserDetailSerializer {
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -27,7 +30,10 @@ func GetUserInfo(token string) *ResponseUserDetailSerializer {
 	}
 
 	user := ResponseUserDetailSerializer{}
-	json.Unmarshal(body, &user)
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	return &user
 }
