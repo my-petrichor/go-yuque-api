@@ -7,7 +7,6 @@ import (
 	"net/http"
 )
 
-//
 func GetUserInfo(token string) *ResponseUserDetailSerializer {
 	client := http.DefaultClient
 	url := fmt.Sprintf("https://www.yuque.com/api/v2/user")
