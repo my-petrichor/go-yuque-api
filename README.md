@@ -18,3 +18,7 @@ func main() {
 }
 ```
 See [examples](https://github.com/my-Sakura/go-yuque-api/tree/main/examples) folder for more detailed examples.
+
+## license
+[MIT](https://github.com/my-Sakura/go-yuque-api/blob/main/LICENSE) © my-Sakura
+
