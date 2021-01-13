@@ -65,9 +65,6 @@ func GetGroupBookList(token, groupLogin string) *ResponseBookSerializer {
 	if err != nil {
 		fmt.Println(err)
 	}
-	for i, bookDetailSerializer := range book.Data {
-		fmt.Println(i, bookDetailSerializer.Type, bookDetailSerializer.Slug, bookDetailSerializer.Name)
-	}
 
 	return &book
 }
