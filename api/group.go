@@ -20,6 +20,9 @@ func GetGroupList(token, login string) *ResponseUserSerializer {
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -29,6 +32,9 @@ func GetGroupList(token, login string) *ResponseUserSerializer {
 
 	group := ResponseUserSerializer{}
 	err = json.Unmarshal(body, &group)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	return &group
 }
@@ -46,6 +52,9 @@ func GetPublicGroupList(token string) *ResponseUserSerializer {
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -55,6 +64,9 @@ func GetPublicGroupList(token string) *ResponseUserSerializer {
 
 	group := ResponseUserSerializer{}
 	err = json.Unmarshal(body, &group)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	return &group
 }
@@ -72,6 +84,9 @@ func CreateGroup(token, changeName, changeLogin string) *ResponseUserDetailSeria
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -81,6 +96,9 @@ func CreateGroup(token, changeName, changeLogin string) *ResponseUserDetailSeria
 
 	user := ResponseUserDetailSerializer{}
 	err = json.Unmarshal(body, &user)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	return &user
 }
@@ -98,6 +116,9 @@ func GetGroupDetailInfo(token, login string) *ResponseUserDetailSerializer {
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -107,6 +128,9 @@ func GetGroupDetailInfo(token, login string) *ResponseUserDetailSerializer {
 
 	user := ResponseUserDetailSerializer{}
 	err = json.Unmarshal(body, &user)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	return &user
 }
@@ -123,6 +147,9 @@ func GetGroupMemberInfo(token, login string) *ResponseGroupUserSerializer {
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -130,10 +157,11 @@ func GetGroupMemberInfo(token, login string) *ResponseGroupUserSerializer {
 		fmt.Println(err)
 	}
 
-	fmt.Println(string(body))
-
 	group := ResponseGroupUserSerializer{}
 	err = json.Unmarshal(body, &group)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	return &group
 }
@@ -150,6 +178,9 @@ func UpdateGroupDetailInfo(token, login, changeName, changeLogin string) *Respon
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -159,6 +190,9 @@ func UpdateGroupDetailInfo(token, login, changeName, changeLogin string) *Respon
 
 	user := ResponseUserDetailSerializer{}
 	err = json.Unmarshal(body, &user)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	return &user
 }
@@ -175,6 +209,9 @@ func UpdateGroupMember(token, groupLogin, login string) *ResponseGroupUserDetail
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -202,6 +239,9 @@ func DeleteGroup(token, login string) *ResponseUserDetailSerializer {
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -211,6 +251,9 @@ func DeleteGroup(token, login string) *ResponseUserDetailSerializer {
 
 	user := ResponseUserDetailSerializer{}
 	err = json.Unmarshal(body, &user)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	return &user
 }
@@ -227,6 +270,9 @@ func DeleteGroupMember(token, groupLogin, login string) *ResponseGroupUserDetail
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
