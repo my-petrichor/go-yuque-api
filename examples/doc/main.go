@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	token := "YLN7hYz4iKmWSs1MfyLDrNY2IqZaM2ZabOOmpIAX"
-	namespace := "my-sakura/doc"
+	token := "[token]"
+	namespace := "[login]/[repo_slug]"
 
 	docs := api.GetDocumentList(token, namespace)
 	for _, doc := range docs.Data {
