@@ -60,9 +60,9 @@ func GetPublicGroupList(token string) *ResponseUserSerializer {
 }
 
 //Create group
-func CreateGroup(token, name, login string) *ResponseUserDetailSerializer {
+func CreateGroup(token, changeName, changeLogin string) *ResponseUserDetailSerializer {
 	client := http.DefaultClient
-	url := fmt.Sprintf("https://www.yuque.com/api/v2/groups?name=%s&login=%s", name, login)
+	url := fmt.Sprintf("https://www.yuque.com/api/v2/groups?name=%s&login=%s", changeName, changeLogin)
 
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
@@ -165,7 +165,7 @@ func UpdateGroupDetailInfo(token, login, changeName, changeLogin string) *Respon
 
 func UpdateGroupMember(token, groupLogin, login string) *ResponseGroupUserDetailSerializer {
 	client := http.DefaultClient
-	url := fmt.Sprintf("https://www.yuque.com/api/v2/groups/%s/users/%s?name=%s&login=%s&description", groupLogin, login)
+	url := fmt.Sprintf("https://www.yuque.com/api/v2/groups/%s/users/%s", groupLogin, login)
 
 	req, err := http.NewRequest("PUT", url, nil)
 	if err != nil {
