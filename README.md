@@ -3,6 +3,14 @@ a SDK of yuque API written in go
 
 ## examples
 ```
+package main
+
+import (
+	"fmt"
+
+	"github.com/my-Sakura/go-yuque-api/api"
+)
+
 func main() {
 	token := "[token]"
 	user := api.GetUserInfo(token)
