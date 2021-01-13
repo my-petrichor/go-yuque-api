@@ -1,44 +1,97 @@
 package api
 
+type ResponseGroupUserSerializer struct {
+	Data []GroupUserSerializer `json: "data"`
+}
+
+type ResponseGroupUserDetailSerializer struct {
+	Data GroupUserDetailSerializer `json: "data"`
+}
+
+type GroupUserDetailSerializer struct {
+	Create     bool           `json: "create"`
+	Update     bool           `json: "update"`
+	Destroy    bool           `json: "destroy"`
+	Id         int            `json: "id"`
+	Group_id   int            `json: "group_id"`
+	User_id    int            `json: "user_id"`
+	User       UserSerializer `json: "user"`
+	Role       int            `json: "role"`
+	Status     int            `json: "status"`
+	Created_at string         `json: "created_at"`
+	Updated_at string         `json: "updated_at"`
+	Group      UserSerializer `json: "group"`
+	Serializer string         `json: "_serializer"`
+}
+
+//yuque groupUserSerializer
+type GroupUserSerializer struct {
+	Id         int            `json: "id"`
+	Group_id   int            `json: "group_id"`
+	User_id    int            `json: "user_id"`
+	User       UserSerializer `json: "user"`
+	Role       int            `json: "role"`
+	Status     int            `json: "status"`
+	Created_at string         `json: "created_at"`
+	Updated_at string         `json: "updated_at"`
+	Group      UserSerializer `json: "group"`
+	Serializer string         `json: "_serializer"`
+}
+
 type ResponseUserDetailSerializer struct {
-	Data UserDetailSerializer `json: "data"`
+	Abilities AbilitiesSerializer  `json: "abilities"`
+	Meta      MetaSerializer       `json: "meta"`
+	Data      UserDetailSerializer `json: "data"`
 }
 
 //yuque UserDetailSerializer
 type UserDetailSerializer struct {
-	Id                 int    `json: "id"`
-	Type               string `json: "type"`
-	Space_id           int    `json: "space_id"`
-	Account_id         int    `json: "account_id"`
-	Login              string `json: "login"`
-	Name               string `json: "name"`
-	Avatar_url         string `json: "avatar_url"`
-	Books_count        int    `json: "books_count"`
-	Public_books_count int    `json: public_books_count"`
-	Followers_count    int    `json: "followers_count"`
-	Following_count    int    `json: "following_count"`
-	Public             int    `json: "public"`
-	Description        string `json: "description"`
-	Created_at         string `json: created_at"`
-	Updated_at         string `json: "updated_at"`
-	Serializer         string `json: "_serializer"`
+	Id                  int    `json: "id"`
+	Type                string `json: "type"`
+	Space_id            int    `json: "space_id"`
+	Account_id          int    `json: "account_id"`
+	Organization_id     int    `json: "organization_id"`
+	Login               string `json: "login"`
+	Name                string `json: "name"`
+	Avatar_url          string `json: "avatar_url"`
+	Owner_id            int    `json: "owner_id"`
+	Books_count         int    `json: "books_count"`
+	Public_books_count  int    `json: public_books_count"`
+	Public_topics_count int    `json: "public_topics_count"`
+	Members_count       int    `json: "members_count"`
+	Grains_sum          int    `json: "grains_sum"`
+	Followers_count     int    `json: "followers_count"`
+	Following_count     int    `json: "following_count"`
+	Public              int    `json: "public"`
+	Description         string `json: "description"`
+	Created_at          string `json: created_at"`
+	Updated_at          string `json: "updated_at"`
+	Serializer          string `json: "_serializer"`
+}
+
+type ResponseUserSerializer struct {
+	Data []UserSerializer `json: "data"`
 }
 
 //yuque UserSerializer
 type UserSerializer struct {
-	Id                 int    `json: "id"`
-	Type               string `json: "type"`
-	Login              string `json: "login"`
-	Name               string `json: "name"`
-	Description        string `json: "description"`
-	Avatar_url         string `json: "avatar_url"`
-	Books_count        int    `json: "books_count"`
-	Public_books_count int    `json: public_books_count"`
-	Followers_count    int    `json: "followers_count"`
-	Following_count    int    `json: "following_count"`
-	Created_at         string `json: created_at"`
-	Updated_at         string `json: "updated_at"`
-	Serializer         string `json: "_serializer"`
+	Id                  int    `json: "id"`
+	Type                string `json: "type"`
+	Login               string `json: "login"`
+	Name                string `json: "name"`
+	Description         string `json: "description"`
+	Avatar_url          string `json: "avatar_url"`
+	Books_count         int    `json: "books_count"`
+	Public_books_count  int    `json: public_books_count"`
+	Topics_count        int    `json: "topics_count"`
+	Public_topics_count int    `json: "public_topics_count"`
+	Members_count       int    `json: "members_count"`
+	Public              int    `json: "public"`
+	Followers_count     int    `json: "followers_count"`
+	Following_count     int    `json: "following_count"`
+	Created_at          string `json: created_at"`
+	Updated_at          string `json: "updated_at"`
+	Serializer          string `json: "_serializer"`
 }
 
 type ResponseBookSerializer struct {
@@ -152,9 +205,22 @@ type ResponseDocDetailSerializer struct {
 }
 
 type AbilitiesSerializer struct {
-	Update  bool           `json: "update"`
-	Destroy bool           `json: "destroy"`
-	Doc     DocumentCreate `json: "doc"`
+	Update     bool                      `json: "update"`
+	Destroy    bool                      `json: "destroy"`
+	Doc        DocumentCreate            `json: "doc"`
+	Read       bool                      `json: "read"`
+	Group_user GroupUserDetailSerializer `json: "group_user"`
+	Repo       RepoDetailSerializer      `json: "repo"`
+}
+
+type MetaSerializer struct {
+	Topic_enable int `json: "topic_enable"`
+}
+
+type RepoDetailSerializer struct {
+	Create  bool `json: "create"`
+	Update  bool `json: "update"`
+	Destroy bool `json: "destroy"`
 }
 
 type DocumentCreate struct {
