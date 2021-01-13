@@ -19,6 +19,9 @@ func GetDocumentList(token, namespace string) *ResponseDocSerializer {
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -28,9 +31,9 @@ func GetDocumentList(token, namespace string) *ResponseDocSerializer {
 
 	doc := ResponseDocSerializer{}
 	err = json.Unmarshal(body, &doc)
-	// for i, docSerializer := range doc.Data {
-	// 	fmt.Println(i, docSerializer.Id, docSerializer.Slug, docSerializer.Title)
-	// }
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	return &doc
 }
@@ -47,6 +50,9 @@ func GetDocumentInfo(token, namespace, slug string) *ResponseDocDetailSerializer
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -55,7 +61,10 @@ func GetDocumentInfo(token, namespace, slug string) *ResponseDocDetailSerializer
 	}
 
 	doc := ResponseDocDetailSerializer{}
-	json.Unmarshal(body, &doc)
+	err = json.Unmarshal(body, &doc)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	return &doc
 }
@@ -72,9 +81,15 @@ func CreateDocument(token, namespace, changeSlug, changeTitle string) *ResponseD
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
 	doc := ResponseDocDetailSerializer{}
 	err = json.Unmarshal(body, &doc)
 	if err != nil {
@@ -96,9 +111,15 @@ func UpdateDocument(token, namespace, id, changeContent string) *ResponseDocDeta
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
 	doc := ResponseDocDetailSerializer{}
 	err = json.Unmarshal(body, &doc)
 	if err != nil {
@@ -120,9 +141,15 @@ func DeleteDocument(token, namespace string, documentId int) *ResponseDocDetailS
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
 	doc := ResponseDocDetailSerializer{}
 	err = json.Unmarshal(body, &doc)
 	if err != nil {
