@@ -99,9 +99,9 @@ func CreateDocument(token, namespace, changeSlug, changeTitle string) *ResponseD
 	return &doc
 }
 
-func UpdateDocument(token, namespace, id, changeContent string) *ResponseDocDetailSerializer {
+func UpdateDocument(token, namespace, changeContent string, id int) *ResponseDocDetailSerializer {
 	client := http.DefaultClient
-	url := fmt.Sprintf("https://www.yuque.com/api/v2/repos/%s/docs/%s?body=%s", namespace, id, changeContent)
+	url := fmt.Sprintf("https://www.yuque.com/api/v2/repos/%s/docs/%d?body=%s", namespace, id, changeContent)
 
 	req, err := http.NewRequest("PUT", url, nil)
 	if err != nil {
