@@ -60,9 +60,9 @@ func GetDocumentInfo(token, namespace, slug string) *ResponseDocDetailSerializer
 	return &doc
 }
 
-func CreateDocument(token, namespace, slug, title string) *ResponseDocDetailSerializer {
+func CreateDocument(token, namespace, changeSlug, changeTitle string) *ResponseDocDetailSerializer {
 	client := http.DefaultClient
-	url := fmt.Sprintf("https://www.yuque.com/api/v2/repos/%s/docs?slug=%s&title=%s", namespace, slug, title)
+	url := fmt.Sprintf("https://www.yuque.com/api/v2/repos/%s/docs?slug=%s&title=%s", namespace, changeSlug, changeTitle)
 
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
@@ -84,9 +84,9 @@ func CreateDocument(token, namespace, slug, title string) *ResponseDocDetailSeri
 	return &doc
 }
 
-func UpdateDocument(token, namespace, id, content string) *ResponseDocDetailSerializer {
+func UpdateDocument(token, namespace, id, changeContent string) *ResponseDocDetailSerializer {
 	client := http.DefaultClient
-	url := fmt.Sprintf("https://www.yuque.com/api/v2/repos/%s/docs/%s?body=%s", namespace, id, content)
+	url := fmt.Sprintf("https://www.yuque.com/api/v2/repos/%s/docs/%s?body=%s", namespace, id, changeContent)
 
 	req, err := http.NewRequest("PUT", url, nil)
 	if err != nil {
@@ -110,7 +110,7 @@ func UpdateDocument(token, namespace, id, content string) *ResponseDocDetailSeri
 
 func DeleteDocument(token, namespace string, documentId int) *ResponseDocDetailSerializer {
 	client := http.DefaultClient
-	url := fmt.Sprintf("https://www.yuque.com/api/v2/repos/%s/docs/%d?body=%s", namespace, documentId)
+	url := fmt.Sprintf("https://www.yuque.com/api/v2/repos/%s/docs/%d", namespace, documentId)
 
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
