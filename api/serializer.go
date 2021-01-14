@@ -258,6 +258,6 @@ type DocDetailSerializer struct {
 	Cover              string               `json: "cover"`
 	Description        string               `json: "description"`
 	Custon_description string               `json: custon_description"`
-	Hits               string               `json: "hits"`
+	Hits               int                  `json: "hits"`
 	Serializer         string               `json: "serializer"`
 }
