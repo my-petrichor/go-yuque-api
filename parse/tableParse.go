@@ -22,7 +22,7 @@ type Fields struct {
 
 func parseTabel() Table {
 	var fields []Fields = make([]Fields, 0)
-	token := "YLN7hYz4iKmWSs1MfyLDrNY2IqZaM2ZabOOmpIAX"
+	token := "[token]"
 	doc := api.GetDocumentInfo(token, "my-Sakura/doc", "hmi4x3")
 	trimSpace := strings.TrimSpace(doc.Data.Body)
 	splitN := strings.Split(trimSpace, "\n")
