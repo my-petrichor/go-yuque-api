@@ -9,9 +9,12 @@ import (
 func main() {
 	token := "[token]"
 	namespace := "[login]/[repo_slug]"
+	oldSlug := "[old_document_slug]"
 
-	docs := api.GetDocumentList(token, namespace)
-	for _, doc := range docs.Data {
-		fmt.Printf("slug: %s, title: %s\n", doc.Slug, doc.Title)
-	}
+	c := api.NewClient(token)
+	id := c.GetDocumentID(namespace, oldSlug)
+	newSlug := "[new_document_slug]"
+	// change oldSlug to newSlug
+	s := c.ChangeDocumentSlug(id, newSlug)
+	fmt.Println(id, s)
 }

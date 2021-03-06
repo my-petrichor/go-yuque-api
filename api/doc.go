@@ -4,7 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
+
+	"github.com/FlashFeiFei/yuque/response"
 )
 
 func GetDocumentList(token, namespace string) *ResponseDocSerializer {
@@ -38,8 +41,7 @@ func GetDocumentList(token, namespace string) *ResponseDocSerializer {
 	return &doc
 }
 
-func GetDocumentInfo(token, namespace, slug string) *ResponseDocDetailSerializer {
-	client := http.DefaultClient
+func (c *Client) GetDocumentInfo(namespace, slug string) *ResponseDocDetailSerializer {
 	url := fmt.Sprintf("https://www.yuque.com/api/v2/repos/%s/docs/%s", namespace, slug)
 
 	req, err := http.NewRequest("GET", url, nil)
@@ -47,9 +49,9 @@ func GetDocumentInfo(token, namespace, slug string) *ResponseDocDetailSerializer
 		fmt.Println(err)
 	}
 
-	req.Header.Add("X-Auth-Token", token)
+	req.Header.Add("X-Auth-Token", c.Token)
 
-	resp, err := client.Do(req)
+	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -67,6 +69,11 @@ func GetDocumentInfo(token, namespace, slug string) *ResponseDocDetailSerializer
 	}
 
 	return &doc
+}
+
+func (c *Client) GetDocumentID(namespace, slug string) int {
+	doc := c.GetDocumentInfo(namespace, slug)
+	return doc.Data.ID
 }
 
 func CreateDocument(token, namespace, changeSlug, changeTitle string) *ResponseDocDetailSerializer {
@@ -97,6 +104,24 @@ func CreateDocument(token, namespace, changeSlug, changeTitle string) *ResponseD
 	}
 
 	return &doc
+}
+
+func (c *Client) ChangeDocumentSlug(id int, slug string) string {
+	url := fmt.Sprintf("https://www.yuque.com/api/v2/repos/my-sakura/doc/docs/%d?slug=%s", id, slug)
+	req, _ := http.NewRequest("PUT", url, nil)
+
+	req.Header.Add("X-Auth-Token", c.Token)
+	resp, _ := c.HTTPClient.Do(req)
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+
+	doc := response.ResponseDocDetailSerializer{}
+	err := json.Unmarshal(body, &doc)
+	if err != nil {
+		log.Fatal("unmarshal error", err)
+	}
+
+	return doc.Data.Slug
 }
 
 func UpdateDocument(token, namespace, changeContent string, id int) *ResponseDocDetailSerializer {

@@ -7,18 +7,16 @@ import (
 	"net/http"
 )
 
-func GetUserBookList(token, login string) *ResponseBookSerializer {
-	client := http.DefaultClient
+func (c *Client) GetUserBookList(login string) *ResponseBookSerializer {
 	url := fmt.Sprintf("https://www.yuque.com/api/v2/users/%s/repos", login)
-
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	req.Header.Add("X-Auth-Token", token)
+	req.Header.Add("X-Auth-Token", c.Token)
 
-	resp, err := client.Do(req)
+	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
 		fmt.Println(err)
 	}
