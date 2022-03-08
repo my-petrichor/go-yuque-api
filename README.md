@@ -30,8 +30,13 @@ import (
 
 func main() {
 	token := "[token]"
-	user := api.GetUserInfo(token)
-	fmt.Printf("Name: %s, user_id: %d, login: %s\n", user.Data.Name, user.Data.ID, user.Data.Login)
+	client := yuque.NewClient(token)
+	user, err := client.User.Get()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(user)
 }
 ```
 
