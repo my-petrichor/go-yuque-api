@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	token := "YLN7hYz4iKmWSs1MfyLDrNY2IqZaM2ZabOOmpIAX"
+	token := "[token]"
 	client := yuque.NewClient(token)
 	search, err := client.Search.Start("doc", "history", yuque.SearchOption{Offset: 10})
 	if err != nil {
