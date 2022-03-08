@@ -4,13 +4,13 @@ This library is designed as a simple wrapper around the YuQue API. It's encourag
 
 ## introduction
 
-| Name      | Description                                                     | Example                                              |
-| --------- | --------------------------------------------------------------- | ---------------------------------------------------- |
-| id        | 数据的唯一编号/主键                                             | 1984                                                 |
-| login     | 用户／团队的唯一名称用户／团队编号                              | 用户：用户个人路径团队：如语雀团队，login 值为 yuque |
-| book_slug | 仓库唯一名称                                                    | 如语雀开发者文档这个仓库，book_slug 值为 developer   |
-| namespace | 仓库的唯一名称需要组合 :login/:book_slug 或可以直接使用仓库编号 | yuque/developer                                      |
-| slug      | 文档唯一名称                                                    | 如语雀官方开发者文档的 slug 值为 api                 |
+| Name      | Description                                                     | Example                                                                                     |
+| --------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| id        | 数据的唯一编号/主键                                             | 1984                                                                                        |
+| login     | 用户／团队的唯一名称用户／团队编号                              | 用户：用户个人路径 团队：如[语雀团队](https://www.yuque.com/yuque/)，login 值为 yuque       |
+| book_slug | 仓库唯一名称                                                    | 如[语雀开发者文档](https://www.yuque.com/yuque/developer)这个仓库，book_slug 值为 developer |
+| namespace | 仓库的唯一名称需要组合 :login/:book_slug 或可以直接使用仓库编号 | yuque/developer                                                                             |
+| slug      | 文档唯一名称                                                    | 如[语雀官方开发者文档](https://www.yuque.com/yuque/developer)的 slug 值为 api               |
 
 ## notice
 
