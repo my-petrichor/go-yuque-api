@@ -27,7 +27,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/my-Sakura/go-yuque-api/api"
+    yuque "github.com/my-Sakura/go-yuque-api"
 )
 
 func main() {
