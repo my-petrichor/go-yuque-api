@@ -7,11 +7,11 @@ import (
 	"github.com/my-Sakura/go-yuque-api/internal"
 )
 
-type Search struct {
+type Searcher struct {
 	*Client
 }
 
-type SearchOption struct {
+type SearcherOption struct {
 	// split page example: 1, 2, 3...
 	Offset int
 	/*
@@ -24,8 +24,8 @@ type SearchOption struct {
 	Related bool
 }
 
-func newSearch(c *Client) *Search {
-	return &Search{
+func newSearch(c *Client) *Searcher {
+	return &Searcher{
 		c,
 	}
 }
@@ -41,8 +41,8 @@ func newSearch(c *Client) *Search {
  "user"
  "attachment"
 */
-func (s *Search) Start(kind, keyword string, options ...SearchOption) (*internal.SearchSerializer, error) {
-	var opt SearchOption
+func (s *Searcher) Work(kind, keyword string, options ...SearcherOption) (*internal.SearchSerializer, error) {
+	var opt SearcherOption
 	if len(options) > 1 {
 		return nil, ErrTooManyOptions
 	} else if len(options) == 1 {

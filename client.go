@@ -22,7 +22,7 @@ type Client struct {
 	Document *Document
 	Repo     *Repo
 	Group    *Group
-	Search   *Search
+	Search   *Searcher
 }
 
 type clientOption func(*Client)
