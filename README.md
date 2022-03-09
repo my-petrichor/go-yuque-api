@@ -33,7 +33,7 @@ import (
 func main() {
 	token := "[token]"
 	client := yuque.NewClient(token)
-	user, err := client.User.Get()
+	user, err := client.User.GetInfo()
 	if err != nil {
 		panic(err)
 	}
