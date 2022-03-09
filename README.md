@@ -16,6 +16,8 @@ This library is designed as a simple wrapper around the YuQue API. It's encourag
 
 - 匿名请求，IP 限制, 200 次/小时
 - 传递 Token 的情况下，每个用户（基于 Token 关联到的账户），5000 次/小时
+- 对于文档更改接口，如果想要对手动更新过的文档进行更改，需要设置 ForceASL option 为 1 进行强制更改，
+  因为手动更改过文档会将文档格式更改为 lake，而语雀接口现在只支持 markdown 类型的文档更改。
 
 ## examples
 

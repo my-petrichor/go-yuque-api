@@ -2,17 +2,38 @@ package yuque
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 
 	"github.com/my-Sakura/go-yuque-api/internal"
 )
 
 type Document struct {
-	*client
+	*Client
 }
 
-func newDocument(c *client) *Document {
+type DocumentOption struct {
+	Slug  string
+	Title string
+	Body  string
+	/*
+		"markdown", "lake", "html"
+		default is markdown
+	*/
+	Format string
+	/*
+		0 - private
+		1 - public
+	*/
+	Public int
+	/*
+		If you edit the document on the page, then the document will turn into a Lake format,
+		if you can use MarkDown to update, this is what you need to add _force_asl = 1 to
+		ensure the correct conversion of the content.
+	*/
+	ForceASL int
+}
+
+func newDocument(c *Client) *Document {
 	return &Document{
 		c,
 	}
@@ -39,7 +60,7 @@ func (d *Document) ListAll(namespace string) (*internal.ResponseDocSerializer, e
 }
 
 // Get get document detail info
-func (d *Document) Get(namespace, slug string) (*internal.ResponseDocDetailSerializer, error) {
+func (d *Document) GetInfo(namespace, slug string) (*internal.ResponseDocDetailSerializer, error) {
 	var (
 		url      = fmt.Sprintf(d.BaseURL+internal.DocumentGetPath, namespace, slug)
 		document = internal.ResponseDocDetailSerializer{}
@@ -58,34 +79,34 @@ func (d *Document) Get(namespace, slug string) (*internal.ResponseDocDetailSeria
 	return &document, nil
 }
 
-func (d *Document) GetDocumentID(namespace, slug string) (int, error) {
-	doc, err := d.Get(namespace, slug)
-	return doc.Data.ID, err
-}
-
 // Create create a document
-/*
- public
- 0 - private
- 1 - public
-*/
-/*
- format
- markdown, lake, html
- default is markdown
-*/
-func (d *Document) Create(namespace, newSlug, newTitle, format, body string, public int) (*internal.ResponseDocDetailSerializer, error) {
+func (d *Document) Create(namespace string, options ...DocumentOption) (*internal.ResponseDocDetailSerializer, error) {
+	var opt DocumentOption
+	if len(options) > 1 {
+		return nil, ErrTooManyOptions
+	} else if len(options) == 1 {
+		opt = options[0]
+	}
+
 	var (
-		url      = fmt.Sprintf(d.BaseURL+internal.DocumentCreatePath, namespace, public)
+		url      = fmt.Sprintf(d.BaseURL+internal.DocumentCreatePath, namespace)
 		document = internal.ResponseDocDetailSerializer{}
+		body     = struct {
+			Slug   string `json:"slug"`
+			Title  string `json:"title"`
+			Body   string `json:"body"`
+			Format string `json:"format"`
+			Public int    `json:"public"`
+		}{
+			Slug:   opt.Slug,
+			Title:  opt.Title,
+			Body:   opt.Body,
+			Format: opt.Format,
+			Public: opt.Public,
+		}
 	)
 
-	respBody, err := d.do(url, Option{Method: "POST", Body: map[string]string{
-		"title":  newTitle,
-		"slug":   newSlug,
-		"format": format,
-		"body":   body,
-	}})
+	respBody, err := d.do(url, option{Method: "POST", Body: body})
 	if err != nil {
 		return nil, err
 	}
@@ -98,34 +119,43 @@ func (d *Document) Create(namespace, newSlug, newTitle, format, body string, pub
 	return &document, nil
 }
 
+func (d *Document) getDocumentID(namespace, slug string) (int, error) {
+	doc, err := d.GetInfo(namespace, slug)
+	return doc.Data.ID, err
+}
+
 // Update update a document
-/*
- public
- 0 - private
- 1 - public
-*/
-/*
- If you edit the document on the page, then the document will turn into a Lake format,
- if you can use MarkDown to update, this is what you need to add _force_asl = 1 to
- ensure the correct conversion of the content.
-*/
-func (d *Document) Update(namespace, newTitle, newSlug, body string, id, public int, forceASIs ...int) (*internal.ResponseDocDetailSerializer, error) {
-	var forceASI int
-	if len(forceASIs) > 1 {
-		return nil, errors.New("forceASI length more than one")
-	} else if len(forceASIs) == 1 {
-		forceASI = forceASIs[0]
+func (d *Document) Update(namespace, slug string, options ...DocumentOption) (*internal.ResponseDocDetailSerializer, error) {
+	var opt DocumentOption
+	if len(options) > 1 {
+		return nil, ErrTooManyOptions
+	} else if len(options) == 1 {
+		opt = options[0]
+	}
+
+	documentID, err := d.getDocumentID(namespace, slug)
+	if err != nil {
+		return nil, ErrGetDocumentID
 	}
 	var (
-		url      = fmt.Sprintf(d.BaseURL+internal.DocumentUpdatePath, namespace, id, public, forceASI)
+		url      = fmt.Sprintf(d.BaseURL+internal.DocumentUpdatePath, namespace, documentID)
 		document = internal.ResponseDocDetailSerializer{}
+		body     = struct {
+			Slug     string `json:"slug"`
+			Title    string `json:"title"`
+			Body     string `json:"body"`
+			Public   int    `json:"public"`
+			ForceASL int    `json:"_force_asl"`
+		}{
+			Slug:     opt.Slug,
+			Title:    opt.Title,
+			Body:     opt.Body,
+			Public:   opt.Public,
+			ForceASL: opt.ForceASL,
+		}
 	)
 
-	respBody, err := d.do(url, Option{Method: "PUT", Body: map[string]string{
-		"title": newTitle,
-		"slug":  newSlug,
-		"body":  body,
-	}})
+	respBody, err := d.do(url, option{Method: "PUT", Body: body})
 	if err != nil {
 		return nil, err
 	}
@@ -139,13 +169,18 @@ func (d *Document) Update(namespace, newTitle, newSlug, body string, id, public 
 }
 
 // Delete delete a document
-func (d *Document) Delete(namespace string, documentID int) (*internal.ResponseDocDetailSerializer, error) {
+func (d *Document) Delete(namespace, slug string) (*internal.ResponseDocDetailSerializer, error) {
+	documentID, err := d.getDocumentID(namespace, slug)
+	if err != nil {
+		return nil, ErrGetDocumentID
+	}
+
 	var (
 		url      = fmt.Sprintf(d.BaseURL+internal.DocumentDeletePath, namespace, documentID)
 		document = internal.ResponseDocDetailSerializer{}
 	)
 
-	respBody, err := d.do(url, Option{Method: "DELETE"})
+	respBody, err := d.do(url, option{Method: "DELETE"})
 	if err != nil {
 		return nil, err
 	}

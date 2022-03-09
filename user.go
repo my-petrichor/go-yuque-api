@@ -8,17 +8,17 @@ import (
 )
 
 type User struct {
-	*client
+	*Client
 }
 
-func newUser(c *client) *User {
+func newUser(c *Client) *User {
 	return &User{
 		c,
 	}
 }
 
 // Get get user info
-func (u *User) Get() (*internal.ResponseUserDetailSerializer, error) {
+func (u *User) GetInfo() (*internal.ResponseUserDetailSerializer, error) {
 	var (
 		url  = fmt.Sprintf(u.BaseURL + internal.UserGetPath)
 		user = internal.ResponseUserDetailSerializer{}

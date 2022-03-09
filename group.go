@@ -8,10 +8,16 @@ import (
 )
 
 type Group struct {
-	*client
+	*Client
 }
 
-func newGroup(c *client) *Group {
+type GroupOption struct {
+	Login       string
+	Name        string
+	Description string
+}
+
+func newGroup(c *Client) *Group {
 	return &Group{
 		c,
 	}
@@ -37,7 +43,7 @@ func (g *Group) ListAll(login string) (*internal.ResponseUserSerializer, error) 
 	return &group, nil
 }
 
-// ListPublic list all public group that user join in
+// ListPublic list all public group
 func (g *Group) ListPublic() (*internal.ResponseUserSerializer, error) {
 	var (
 		url   = g.BaseURL + internal.GroupListPublicPath
@@ -58,7 +64,7 @@ func (g *Group) ListPublic() (*internal.ResponseUserSerializer, error) {
 }
 
 // Get get single group detail info
-func (g *Group) Get(groupLogin string) (*internal.ResponseUserDetailSerializer, error) {
+func (g *Group) GetInfo(groupLogin string) (*internal.ResponseUserDetailSerializer, error) {
 	var (
 		url   = fmt.Sprintf(g.BaseURL+internal.GroupGetPath, groupLogin)
 		group = internal.ResponseUserDetailSerializer{}
@@ -98,17 +104,29 @@ func (g *Group) GetMembers(groupLogin string) (*internal.ResponseGroupUserSerial
 }
 
 // Create create a group
-func (g *Group) Create(repoName, newLogin, description string) (*internal.ResponseUserDetailSerializer, error) {
+func (g *Group) Create(newGroupName, newGroupLogin string, options ...GroupOption) (*internal.ResponseUserDetailSerializer, error) {
+	var opt GroupOption
+	if len(options) > 1 {
+		return nil, ErrTooManyOptions
+	} else if len(options) == 1 {
+		opt = options[0]
+	}
+
 	var (
 		url   = g.BaseURL + internal.GroupCreatePath
 		group = internal.ResponseUserDetailSerializer{}
+		body  = struct {
+			Name        string `json:"name"`
+			Login       string `json:"login"`
+			Description string `json:"description"`
+		}{
+			Name:        newGroupName,
+			Login:       newGroupLogin,
+			Description: opt.Description,
+		}
 	)
 
-	respBody, err := g.do(url, Option{Method: "POST", Body: map[string]string{
-		"name":        repoName,
-		"login":       newLogin,
-		"description": description,
-	}})
+	respBody, err := g.do(url, option{Method: "POST", Body: body})
 	if err != nil {
 		return nil, err
 	}
@@ -122,17 +140,29 @@ func (g *Group) Create(repoName, newLogin, description string) (*internal.Respon
 }
 
 // Update update group info
-func (g *Group) Update(groupLogin, newGroupLogin, newGroupName, newDescription string) (*internal.ResponseUserDetailSerializer, error) {
+func (g *Group) Update(groupLogin string, options ...GroupOption) (*internal.ResponseUserDetailSerializer, error) {
+	var opt GroupOption
+	if len(options) > 1 {
+		return nil, ErrTooManyOptions
+	} else if len(options) == 1 {
+		opt = options[0]
+	}
+
 	var (
 		url   = fmt.Sprintf(g.BaseURL+internal.GroupUpdatePath, groupLogin)
 		group = internal.ResponseUserDetailSerializer{}
+		body  = struct {
+			Name        string `json:"name"`
+			Login       string `json:"login"`
+			Description string `json:"description"`
+		}{
+			Name:        opt.Name,
+			Login:       opt.Login,
+			Description: opt.Description,
+		}
 	)
 
-	respBody, err := g.do(url, Option{Method: "PUT", Body: map[string]string{
-		"name":        newGroupName,
-		"login":       newGroupLogin,
-		"description": newDescription,
-	}})
+	respBody, err := g.do(url, option{Method: "PUT", Body: body})
 	if err != nil {
 		return nil, err
 	}
@@ -153,7 +183,7 @@ func (g *Group) UpdateMember(groupLogin, login string, role int) (*internal.Resp
 		group = internal.ResponseGroupUserDetailSerializer{}
 	)
 
-	respBody, err := g.do(url, Option{Method: "PUT", Body: map[string]int{
+	respBody, err := g.do(url, option{Method: "PUT", Body: map[string]int{
 		"role": role,
 	}})
 	if err != nil {
@@ -175,7 +205,7 @@ func (g *Group) Delete(groupLogin string) (*internal.ResponseUserDetailSerialize
 		group = internal.ResponseUserDetailSerializer{}
 	)
 
-	respBody, err := g.do(url, Option{Method: "DELETE"})
+	respBody, err := g.do(url, option{Method: "DELETE"})
 	if err != nil {
 		return nil, err
 	}
@@ -195,7 +225,7 @@ func (g *Group) DeleteMember(groupLogin, login string) (*internal.ResponseGroupU
 		group = internal.ResponseGroupUserDetailSerializer{}
 	)
 
-	respBody, err := g.do(url, Option{Method: "DELETE"})
+	respBody, err := g.do(url, option{Method: "DELETE"})
 	if err != nil {
 		return nil, err
 	}

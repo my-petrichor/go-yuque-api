@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -12,9 +11,12 @@ import (
 	"github.com/my-Sakura/go-yuque-api/internal"
 )
 
-type client struct {
+type Client struct {
 	Token   string
 	BaseURL string
+
+	// http request User-Agent
+	UserAgent string
 
 	User     *User
 	Document *Document
@@ -23,10 +25,10 @@ type client struct {
 	Search   *Search
 }
 
-type clientOption func(*client)
+type clientOption func(*Client)
 
-func NewClient(token string, options ...clientOption) *client {
-	client := &client{
+func NewClient(token string, options ...clientOption) *Client {
+	client := &Client{
 		Token: token,
 	}
 
@@ -47,28 +49,34 @@ func NewClient(token string, options ...clientOption) *client {
 	return client
 }
 
-func (c *client) SetOption(opts ...clientOption) {
+func (c *Client) SetOption(opts ...clientOption) {
 	for _, option := range opts {
 		option(c)
 	}
 }
 
-func (c *client) WithBaseURL(url string) clientOption {
-	return func(c *client) {
+func WithBaseURL(url string) clientOption {
+	return func(c *Client) {
 		c.BaseURL = url
+	}
+}
+
+func WithUserAgent(userAgent string) clientOption {
+	return func(c *Client) {
+		c.UserAgent = userAgent
 	}
 }
 
 // Option set http requset params
 // need to set User-Agent Header
-type Option struct {
+type option struct {
 	Method  string
 	Headers map[string]string
 	Body    interface{}
 }
 
-func (c *client) do(url string, options ...Option) ([]byte, error) {
-	var option Option
+func (c *Client) do(url string, options ...option) ([]byte, error) {
+	var option option
 	if len(options) > 1 {
 		return nil, errors.New("options length more than one")
 	} else if len(options) == 1 {
@@ -91,7 +99,6 @@ func (c *client) do(url string, options ...Option) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println(string(requestBody), method, "requestBody---dasdasdas")
 		body = bytes.NewBuffer(requestBody)
 	}
 
@@ -105,9 +112,7 @@ func (c *client) do(url string, options ...Option) ([]byte, error) {
 	}
 
 	req.Header.Add("X-Auth-Token", c.Token)
-	if method == "POST" || method == "PUT" {
-		req.Header.Add("Content-type", "application/json")
-	}
+	req.Header.Add("Content-type", "application/json")
 	for k, v := range option.Headers {
 		req.Header.Set(k, v)
 	}

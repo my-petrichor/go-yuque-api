@@ -8,10 +8,28 @@ import (
 )
 
 type Repo struct {
-	*client
+	*Client
 }
 
-func newRepo(c *client) *Repo {
+type RepoOption struct {
+	Slug        string
+	Name        string
+	Description string
+	//"Book", "Design", "Sheet", "Column", "Resource", "Thread"
+	Kind string
+	/*
+		0 - private
+		1 - all user
+		2 - space member
+		3 - all user under space (include external contact)
+		4 - only repo
+	*/
+	Public int
+	// TODO Directory information for Book Repo
+	// NewToc string
+}
+
+func newRepo(c *Client) *Repo {
 	return &Repo{
 		c,
 	}
@@ -58,7 +76,7 @@ func (r *Repo) ListAllUnderGroup(login string) (*internal.ResponseBookSerializer
 }
 
 // Get get repo detail info
-func (r *Repo) Get(namespace string) (*internal.ResponseBookDetailSerializer, error) {
+func (r *Repo) GetInfo(namespace string) (*internal.ResponseBookDetailSerializer, error) {
 	var (
 		url  = fmt.Sprintf(r.BaseURL+internal.RepoGetPath, namespace)
 		repo = internal.ResponseBookDetailSerializer{}
@@ -89,6 +107,7 @@ func (r *Repo) GetDir(namespace string) (*internal.ResponseBookDirectoryStructur
 		return nil, err
 	}
 
+	fmt.Println(string(respBody))
 	err = json.Unmarshal(respBody, &repo)
 	if err != nil {
 		return nil, err
@@ -98,31 +117,33 @@ func (r *Repo) GetDir(namespace string) (*internal.ResponseBookDirectoryStructur
 }
 
 // CreateUnderUser create repo under the user
-/*
- public
- 0 - private
- 1 - all user
- 2 - space member
- 3 - all user under space (include external contact)
- 4 - only repo
-*/
-/*
- kind
- "Book" - library
- "Design" - board
-*/
-func (r *Repo) CreateUnderUser(login, newSlug, newName, description, kind string, public int) (*internal.ResponseBookDetailSerializer, error) {
+func (r *Repo) CreateUnderUser(login, newRepoSlug, kind, newRepoName string, options ...RepoOption) (*internal.ResponseBookDetailSerializer, error) {
+	var opt RepoOption
+	if len(options) > 1 {
+		return nil, ErrTooManyOptions
+	} else if len(options) == 1 {
+		opt = options[0]
+	}
+
 	var (
-		url  = fmt.Sprintf(r.BaseURL+internal.RepoCreateUnderUserPath, login, public)
+		url  = fmt.Sprintf(r.BaseURL+internal.RepoCreateUnderUserPath, login)
 		repo = internal.ResponseBookDetailSerializer{}
+		body = struct {
+			Name        string `json:"name"`
+			Slug        string `json:"slug"`
+			Description string `json:"description"`
+			Type        string `json:"type"`
+			Public      int    `json:"public"`
+		}{
+			Name:        newRepoName,
+			Slug:        newRepoSlug,
+			Description: opt.Description,
+			Type:        kind,
+			Public:      opt.Public,
+		}
 	)
 
-	respBody, err := r.do(url, Option{Method: "POST", Body: map[string]string{
-		"name":        newName,
-		"slug":        newSlug,
-		"description": description,
-		"type":        kind,
-	}})
+	respBody, err := r.do(url, option{Method: "POST", Body: body})
 	if err != nil {
 		return nil, err
 	}
@@ -136,31 +157,33 @@ func (r *Repo) CreateUnderUser(login, newSlug, newName, description, kind string
 }
 
 // CreateUnderGroup create repo under the group
-/*
- public
- 0 - private
- 1 - all user
- 2 - space member
- 3 - all user under space (include external contact)
- 4 - only repo
-*/
-/*
- kind
- "Book" - library
- "Design" - board
-*/
-func (r *Repo) CreateUnderGroup(login, newSlug, newName, description, kind string, public int) (*internal.ResponseBookDetailSerializer, error) {
+func (r *Repo) CreateUnderGroup(login, newRepoSlug, kind, newRepoName string, options ...RepoOption) (*internal.ResponseBookDetailSerializer, error) {
+	var opt RepoOption
+	if len(options) > 1 {
+		return nil, ErrTooManyOptions
+	} else if len(options) == 1 {
+		opt = options[0]
+	}
+
 	var (
-		url  = fmt.Sprintf(r.BaseURL+internal.RepoCreateUnderGroupPath, login, public)
+		url  = fmt.Sprintf(r.BaseURL+internal.RepoCreateUnderGroupPath, login)
 		repo = internal.ResponseBookDetailSerializer{}
+		body = struct {
+			Name        string `json:"name"`
+			Slug        string `json:"slug"`
+			Description string `json:"description"`
+			Type        string `json:"type"`
+			Public      int    `json:"public"`
+		}{
+			Name:        newRepoName,
+			Slug:        newRepoSlug,
+			Description: opt.Description,
+			Type:        kind,
+			Public:      opt.Public,
+		}
 	)
 
-	respBody, err := r.do(url, Option{Method: "POST", Body: map[string]string{
-		"name":        newName,
-		"slug":        newSlug,
-		"description": description,
-		"type":        kind,
-	}})
+	respBody, err := r.do(url, option{Method: "POST", Body: body})
 	if err != nil {
 		return nil, err
 	}
@@ -174,26 +197,34 @@ func (r *Repo) CreateUnderGroup(login, newSlug, newName, description, kind strin
 }
 
 // Update update repo info
-/*
- public
- 0 - private
- 1 - all user
- 2 - space member
- 3 - all user under space (include external contact)
- 4 - only repo
-*/
-func (r *Repo) Update(namespace, newName, newSlug, newToc, description string, public int) (*internal.ResponseBookDetailSerializer, error) {
+func (r *Repo) Update(namespace string, options ...RepoOption) (*internal.ResponseBookDetailSerializer, error) {
+	var opt RepoOption
+	if len(options) > 1 {
+		return nil, ErrTooManyOptions
+	} else if len(options) == 1 {
+		opt = options[0]
+	}
+
 	var (
-		url  = fmt.Sprintf(r.BaseURL+internal.RepoUpdatePath, namespace, public)
+		url  = fmt.Sprintf(r.BaseURL+internal.RepoUpdatePath, namespace)
 		repo = internal.ResponseBookDetailSerializer{}
+		body = struct {
+			Name        string `json:"name"`
+			Slug        string `json:"slug"`
+			Description string `json:"description"`
+			Type        string `json:"type"`
+			Public      int    `json:"public"`
+			Toc         string `json:"toc"`
+		}{
+			Name:        opt.Name,
+			Slug:        opt.Slug,
+			Description: opt.Description,
+			Type:        opt.Kind,
+			Public:      opt.Public,
+		}
 	)
 
-	respBody, err := r.do(url, Option{Method: "PUT", Body: map[string]string{
-		"name":        newName,
-		"slug":        newSlug,
-		"toc":         newToc,
-		"description": description,
-	}})
+	respBody, err := r.do(url, option{Method: "PUT", Body: body})
 	if err != nil {
 		return nil, err
 	}
@@ -213,7 +244,7 @@ func (r *Repo) Delete(namespace string) (*internal.ResponseBookDetailSerializer,
 		repo = internal.ResponseBookDetailSerializer{}
 	)
 
-	respBody, err := r.do(url, Option{Method: "DELETE"})
+	respBody, err := r.do(url, option{Method: "DELETE"})
 	if err != nil {
 		return nil, err
 	}

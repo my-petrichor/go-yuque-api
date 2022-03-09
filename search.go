@@ -2,14 +2,13 @@ package yuque
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 
 	"github.com/my-Sakura/go-yuque-api/internal"
 )
 
 type Search struct {
-	*client
+	*Client
 }
 
 type SearchOption struct {
@@ -25,7 +24,7 @@ type SearchOption struct {
 	Related bool
 }
 
-func newSearch(c *client) *Search {
+func newSearch(c *Client) *Search {
 	return &Search{
 		c,
 	}
@@ -42,18 +41,21 @@ func newSearch(c *client) *Search {
  "user"
  "attachment"
 */
-func (s *Search) Start(kind, keyword string, options ...SearchOption) (*internal.ResponseUserDetailSerializer, error) {
-	var option SearchOption
+func (s *Search) Start(kind, keyword string, options ...SearchOption) (*internal.SearchSerializer, error) {
+	var opt SearchOption
 	if len(options) > 1 {
-		return nil, errors.New("options length more than one")
+		return nil, ErrTooManyOptions
 	} else if len(options) == 1 {
-		option = options[0]
+		opt = options[0]
 	}
 
+	if opt.Offset == 0 {
+		opt.Offset = 1
+	}
 	var (
-		url  = fmt.Sprintf(s.BaseURL + internal.SearchPath)
-		user = internal.ResponseUserDetailSerializer{}
-		body = struct {
+		url    = fmt.Sprintf(s.BaseURL + internal.SearchPath)
+		search = internal.SearchSerializer{}
+		body   = struct {
 			Type    string `json:"type"`
 			Q       string `json:"q"`
 			Scope   string `json:"scope"`
@@ -62,22 +64,21 @@ func (s *Search) Start(kind, keyword string, options ...SearchOption) (*internal
 		}{
 			Type:    kind,
 			Q:       keyword,
-			Scope:   option.Scope,
-			Offset:  option.Offset,
-			Related: option.Related,
+			Scope:   opt.Scope,
+			Offset:  opt.Offset,
+			Related: opt.Related,
 		}
 	)
 
-	respBody, err := s.do(url, Option{Body: body})
+	respBody, err := s.do(url, option{Body: body})
 	if err != nil {
 		return nil, err
 	}
 
-	fmt.Println(string(respBody), "----------")
-	err = json.Unmarshal(respBody, &user)
+	err = json.Unmarshal(respBody, &search)
 	if err != nil {
 		return nil, err
 	}
 
-	return &user, nil
+	return &search, nil
 }

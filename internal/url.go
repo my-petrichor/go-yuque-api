@@ -23,8 +23,8 @@ const (
 const (
 	DocumentListPath   = "/repos/%s/docs"
 	DocumentGetPath    = "/repos/%s/docs/%s"
-	DocumentCreatePath = "/repos/%s/docs?public=%d"
-	DocumentUpdatePath = "/repos/%s/docs/%d?public=%d&_force_asi=%d"
+	DocumentCreatePath = "/repos/%s/docs"
+	DocumentUpdatePath = "/repos/%s/docs/%d"
 	DocumentDeletePath = "/repos/%s/docs/%d"
 )
 
@@ -32,9 +32,9 @@ const (
 	RepoListAllUnderUserPath  = "/users/%s/repos"
 	RepoListAllUnderGroupPath = "/groups/%s/repos"
 	RepoGetPath               = "/repos/%s"
-	RepoCreateUnderUserPath   = "/users/%s/repos?public=%d"
-	RepoCreateUnderGroupPath  = "/groups/%s/repos?public=%d"
-	RepoUpdatePath            = "/repos/%s?public=%d"
+	RepoCreateUnderUserPath   = "/users/%s/repos"
+	RepoCreateUnderGroupPath  = "/groups/%s/repos"
+	RepoUpdatePath            = "/repos/%s"
 	RepoDeletePath            = "/repos/%s"
 	RepoGetDirPath            = "/repos/%s/toc"
 )
