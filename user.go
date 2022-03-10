@@ -18,7 +18,7 @@ func newUser(c *Client) *User {
 }
 
 // Get get user info
-func (u *User) GetInfo() (*internal.ResponseUserDetailSerializer, error) {
+func (u *User) GetInfo() (*ResponseUserDetailSerializer, error) {
 	var (
 		url  = fmt.Sprintf(u.BaseURL + internal.UserGetPath)
 		user = internal.ResponseUserDetailSerializer{}

@@ -41,7 +41,7 @@ func newSearch(c *Client) *Searcher {
  "user"
  "attachment"
 */
-func (s *Searcher) Work(kind, keyword string, options ...SearcherOption) (*internal.SearchSerializer, error) {
+func (s *Searcher) Work(kind, keyword string, options ...SearcherOption) (*SearchSerializer, error) {
 	var opt SearcherOption
 	if len(options) > 1 {
 		return nil, ErrTooManyOptions
@@ -54,7 +54,7 @@ func (s *Searcher) Work(kind, keyword string, options ...SearcherOption) (*inter
 	}
 	var (
 		url    = fmt.Sprintf(s.BaseURL + internal.SearchPath)
-		search = internal.SearchSerializer{}
+		search = SearchSerializer{}
 		body   = struct {
 			Type    string `json:"type"`
 			Q       string `json:"q"`

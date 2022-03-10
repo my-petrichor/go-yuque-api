@@ -12,7 +12,8 @@ import (
 )
 
 type Client struct {
-	Token   string
+	Token string
+	// default is "https://www.yuque.com/api/v2"
 	BaseURL string
 
 	// http request User-Agent
@@ -67,8 +68,6 @@ func WithUserAgent(userAgent string) clientOption {
 	}
 }
 
-// Option set http requset params
-// need to set User-Agent Header
 type option struct {
 	Method  string
 	Headers map[string]string

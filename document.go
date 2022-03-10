@@ -40,10 +40,10 @@ func newDocument(c *Client) *Document {
 }
 
 // ListAll list all documents in a repo
-func (d *Document) ListAll(namespace string) (*internal.ResponseDocSerializer, error) {
+func (d *Document) ListAll(namespace string) (*ResponseDocSerializer, error) {
 	var (
 		url      = fmt.Sprintf(d.BaseURL+internal.DocumentListPath, namespace)
-		document = internal.ResponseDocSerializer{}
+		document = ResponseDocSerializer{}
 	)
 
 	respBody, err := d.do(url)
@@ -60,10 +60,10 @@ func (d *Document) ListAll(namespace string) (*internal.ResponseDocSerializer, e
 }
 
 // Get get document detail info
-func (d *Document) GetInfo(namespace, slug string) (*internal.ResponseDocDetailSerializer, error) {
+func (d *Document) GetInfo(namespace, slug string) (*ResponseDocDetailSerializer, error) {
 	var (
 		url      = fmt.Sprintf(d.BaseURL+internal.DocumentGetPath, namespace, slug)
-		document = internal.ResponseDocDetailSerializer{}
+		document = ResponseDocDetailSerializer{}
 	)
 
 	respBody, err := d.do(url)
@@ -80,7 +80,7 @@ func (d *Document) GetInfo(namespace, slug string) (*internal.ResponseDocDetailS
 }
 
 // Create create a document
-func (d *Document) Create(namespace string, options ...DocumentOption) (*internal.ResponseDocDetailSerializer, error) {
+func (d *Document) Create(namespace string, options ...DocumentOption) (*ResponseDocDetailSerializer, error) {
 	var opt DocumentOption
 	if len(options) > 1 {
 		return nil, ErrTooManyOptions
@@ -90,7 +90,7 @@ func (d *Document) Create(namespace string, options ...DocumentOption) (*interna
 
 	var (
 		url      = fmt.Sprintf(d.BaseURL+internal.DocumentCreatePath, namespace)
-		document = internal.ResponseDocDetailSerializer{}
+		document = ResponseDocDetailSerializer{}
 		body     = struct {
 			Slug   string `json:"slug"`
 			Title  string `json:"title"`
@@ -125,7 +125,7 @@ func (d *Document) getDocumentID(namespace, slug string) (int, error) {
 }
 
 // Update update a document
-func (d *Document) Update(namespace, slug string, options ...DocumentOption) (*internal.ResponseDocDetailSerializer, error) {
+func (d *Document) Update(namespace, slug string, options ...DocumentOption) (*ResponseDocDetailSerializer, error) {
 	var opt DocumentOption
 	if len(options) > 1 {
 		return nil, ErrTooManyOptions
@@ -139,7 +139,7 @@ func (d *Document) Update(namespace, slug string, options ...DocumentOption) (*i
 	}
 	var (
 		url      = fmt.Sprintf(d.BaseURL+internal.DocumentUpdatePath, namespace, documentID)
-		document = internal.ResponseDocDetailSerializer{}
+		document = ResponseDocDetailSerializer{}
 		body     = struct {
 			Slug     string `json:"slug"`
 			Title    string `json:"title"`
@@ -169,7 +169,7 @@ func (d *Document) Update(namespace, slug string, options ...DocumentOption) (*i
 }
 
 // Delete delete a document
-func (d *Document) Delete(namespace, slug string) (*internal.ResponseDocDetailSerializer, error) {
+func (d *Document) Delete(namespace, slug string) (*ResponseDocDetailSerializer, error) {
 	documentID, err := d.getDocumentID(namespace, slug)
 	if err != nil {
 		return nil, ErrGetDocumentID
@@ -177,7 +177,7 @@ func (d *Document) Delete(namespace, slug string) (*internal.ResponseDocDetailSe
 
 	var (
 		url      = fmt.Sprintf(d.BaseURL+internal.DocumentDeletePath, namespace, documentID)
-		document = internal.ResponseDocDetailSerializer{}
+		document = ResponseDocDetailSerializer{}
 	)
 
 	respBody, err := d.do(url, option{Method: "DELETE"})
