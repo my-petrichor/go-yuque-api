@@ -1,6 +1,6 @@
 # go-yuque-api
 
-This library is designed as a simple wrapper around the YuQue API. It's encouraged to read YuQue's docs first to get a simple understanding.
+Golang version of yuque api.
 
 ## introduction
 
