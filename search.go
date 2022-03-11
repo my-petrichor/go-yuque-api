@@ -24,7 +24,7 @@ type SearcherOption struct {
 	Related bool
 }
 
-func newSearch(c *Client) *Searcher {
+func newSearcher(c *Client) *Searcher {
 	return &Searcher{
 		c,
 	}

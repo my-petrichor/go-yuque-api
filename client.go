@@ -37,7 +37,7 @@ func NewClient(token string, options ...clientOption) *Client {
 	client.Document = newDocument(client)
 	client.Group = newGroup(client)
 	client.Repo = newRepo(client)
-	client.Search = newSearch(client)
+	client.Search = newSearcher(client)
 
 	for _, option := range options {
 		option(client)

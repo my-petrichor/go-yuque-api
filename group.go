@@ -63,7 +63,7 @@ func (g *Group) ListPublic() (*ResponseUserSerializer, error) {
 	return &group, nil
 }
 
-// Get get single group detail info
+// Get get single group info
 func (g *Group) GetInfo(groupLogin string) (*ResponseUserDetailSerializer, error) {
 	var (
 		url   = fmt.Sprintf(g.BaseURL+internal.GroupGetPath, groupLogin)
@@ -84,7 +84,7 @@ func (g *Group) GetInfo(groupLogin string) (*ResponseUserDetailSerializer, error
 }
 
 // GetMembers get group member info
-func (g *Group) GetMembers(groupLogin string) (*ResponseGroupUserSerializer, error) {
+func (g *Group) GetMember(groupLogin string) (*ResponseGroupUserSerializer, error) {
 	var (
 		url   = fmt.Sprintf(g.BaseURL+internal.GroupGetMemberPath, groupLogin)
 		group = ResponseGroupUserSerializer{}

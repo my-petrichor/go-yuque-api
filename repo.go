@@ -75,7 +75,7 @@ func (r *Repo) ListAllUnderGroup(login string) (*ResponseBookSerializer, error) 
 	return &repo, nil
 }
 
-// Get get repo detail info
+// Get get repo info
 func (r *Repo) GetInfo(namespace string) (*ResponseBookDetailSerializer, error) {
 	var (
 		url  = fmt.Sprintf(r.BaseURL+internal.RepoGetPath, namespace)
