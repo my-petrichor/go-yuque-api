@@ -24,9 +24,9 @@ func newGroup(c *Client) *Group {
 }
 
 // ListAll list all groups that user join in
-func (g *Group) ListAll(login string) (*ResponseUserSerializer, error) {
+func (g *Group) ListAll() (*ResponseUserSerializer, error) {
 	var (
-		url   = fmt.Sprintf(g.BaseURL+internal.GroupListPath, login)
+		url   = fmt.Sprintf(g.baseURL+internal.GroupListPath, g.login)
 		group = ResponseUserSerializer{}
 	)
 
@@ -46,7 +46,7 @@ func (g *Group) ListAll(login string) (*ResponseUserSerializer, error) {
 // ListPublic list all public group
 func (g *Group) ListPublic() (*ResponseUserSerializer, error) {
 	var (
-		url   = g.BaseURL + internal.GroupListPublicPath
+		url   = g.baseURL + internal.GroupListPublicPath
 		group = ResponseUserSerializer{}
 	)
 
@@ -66,7 +66,7 @@ func (g *Group) ListPublic() (*ResponseUserSerializer, error) {
 // Get get single group info
 func (g *Group) GetInfo(groupLogin string) (*ResponseUserDetailSerializer, error) {
 	var (
-		url   = fmt.Sprintf(g.BaseURL+internal.GroupGetPath, groupLogin)
+		url   = fmt.Sprintf(g.baseURL+internal.GroupGetPath, groupLogin)
 		group = ResponseUserDetailSerializer{}
 	)
 
@@ -83,10 +83,10 @@ func (g *Group) GetInfo(groupLogin string) (*ResponseUserDetailSerializer, error
 	return &group, nil
 }
 
-// GetMembers get group member info
+// GetMember get group member info
 func (g *Group) GetMember(groupLogin string) (*ResponseGroupUserSerializer, error) {
 	var (
-		url   = fmt.Sprintf(g.BaseURL+internal.GroupGetMemberPath, groupLogin)
+		url   = fmt.Sprintf(g.baseURL+internal.GroupGetMemberPath, groupLogin)
 		group = ResponseGroupUserSerializer{}
 	)
 
@@ -104,7 +104,7 @@ func (g *Group) GetMember(groupLogin string) (*ResponseGroupUserSerializer, erro
 }
 
 // Create create a group
-func (g *Group) Create(newGroupName, newGroupLogin string, options ...GroupOption) (*ResponseUserDetailSerializer, error) {
+func (g *Group) Create(groupLogin, groupName string, options ...GroupOption) (*ResponseUserDetailSerializer, error) {
 	var opt GroupOption
 	if len(options) > 1 {
 		return nil, ErrTooManyOptions
@@ -113,15 +113,15 @@ func (g *Group) Create(newGroupName, newGroupLogin string, options ...GroupOptio
 	}
 
 	var (
-		url   = g.BaseURL + internal.GroupCreatePath
+		url   = g.baseURL + internal.GroupCreatePath
 		group = ResponseUserDetailSerializer{}
 		body  = struct {
 			Name        string `json:"name"`
 			Login       string `json:"login"`
 			Description string `json:"description"`
 		}{
-			Name:        newGroupName,
-			Login:       newGroupLogin,
+			Name:        groupName,
+			Login:       groupLogin,
 			Description: opt.Description,
 		}
 	)
@@ -149,7 +149,7 @@ func (g *Group) Update(groupLogin string, options ...GroupOption) (*ResponseUser
 	}
 
 	var (
-		url   = fmt.Sprintf(g.BaseURL+internal.GroupUpdatePath, groupLogin)
+		url   = fmt.Sprintf(g.baseURL+internal.GroupUpdatePath, groupLogin)
 		group = ResponseUserDetailSerializer{}
 		body  = struct {
 			Name        string `json:"name"`
@@ -179,7 +179,7 @@ func (g *Group) Update(groupLogin string, options ...GroupOption) (*ResponseUser
 // role: 0 - manager  1 - ordinary
 func (g *Group) UpdateMember(groupLogin, login string, role int) (*ResponseGroupUserDetailSerializer, error) {
 	var (
-		url   = fmt.Sprintf(g.BaseURL+internal.GroupUpdateMemberPath, groupLogin, login)
+		url   = fmt.Sprintf(g.baseURL+internal.GroupUpdateMemberPath, groupLogin, login)
 		group = ResponseGroupUserDetailSerializer{}
 	)
 
@@ -201,7 +201,7 @@ func (g *Group) UpdateMember(groupLogin, login string, role int) (*ResponseGroup
 // Delete delete group
 func (g *Group) Delete(groupLogin string) (*ResponseUserDetailSerializer, error) {
 	var (
-		url   = fmt.Sprintf(g.BaseURL+internal.GroupDeletePath, groupLogin)
+		url   = fmt.Sprintf(g.baseURL+internal.GroupDeletePath, groupLogin)
 		group = ResponseUserDetailSerializer{}
 	)
 
@@ -221,7 +221,7 @@ func (g *Group) Delete(groupLogin string) (*ResponseUserDetailSerializer, error)
 // DeleteMember delete group member
 func (g *Group) DeleteMember(groupLogin, login string) (*ResponseGroupUserDetailSerializer, error) {
 	var (
-		url   = fmt.Sprintf(g.BaseURL+internal.GroupDeleteMemberPath, groupLogin, login)
+		url   = fmt.Sprintf(g.baseURL+internal.GroupDeleteMemberPath, groupLogin, login)
 		group = ResponseGroupUserDetailSerializer{}
 	)
 

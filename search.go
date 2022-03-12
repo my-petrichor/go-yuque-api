@@ -15,13 +15,16 @@ type SearcherOption struct {
 	// split page example: 1, 2, 3...
 	Offset int
 	/*
-		Search path, The path on the team or knowledge base URL
-		For example, "scope = lark" is search for the content of the lark group,
-		"scope = lark/help" is search for the content under the "lark/help" knowledge base
+		"topic"
+		"repo"
+		"doc"
+		"artboard"
+		"group"
 	*/
-	Scope string
-	// true is search with yourself
-	Related bool
+	Kind string
+
+	// TODO Search path, The path on the team or knowledge base URL
+	// Scope string
 }
 
 func newSearcher(c *Client) *Searcher {
@@ -31,17 +34,7 @@ func newSearcher(c *Client) *Searcher {
 }
 
 // Get get user info
-/*
- kind
- "topic"
- "repo"
- "doc"
- "artboard"
- "group"
- "user"
- "attachment"
-*/
-func (s *Searcher) Work(kind, keyword string, options ...SearcherOption) (*SearchSerializer, error) {
+func (s *Searcher) Work(keyword string, options ...SearcherOption) (*SearchSerializer, error) {
 	var opt SearcherOption
 	if len(options) > 1 {
 		return nil, ErrTooManyOptions
@@ -52,21 +45,21 @@ func (s *Searcher) Work(kind, keyword string, options ...SearcherOption) (*Searc
 	if opt.Offset == 0 {
 		opt.Offset = 1
 	}
+	if opt.Kind == "" {
+		opt.Kind = "doc"
+	}
+
 	var (
-		url    = fmt.Sprintf(s.BaseURL + internal.SearchPath)
+		url    = fmt.Sprintf(s.baseURL + internal.SearchPath)
 		search = SearchSerializer{}
 		body   = struct {
-			Type    string `json:"type"`
-			Q       string `json:"q"`
-			Scope   string `json:"scope"`
-			Offset  int    `json:"offset"`
-			Related bool   `json:"related"`
+			Type   string `json:"type"`
+			Q      string `json:"q"`
+			Offset int    `json:"offset"`
 		}{
-			Type:    kind,
-			Q:       keyword,
-			Scope:   opt.Scope,
-			Offset:  opt.Offset,
-			Related: opt.Related,
+			Type:   opt.Kind,
+			Q:      keyword,
+			Offset: opt.Offset,
 		}
 	)
 

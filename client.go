@@ -12,12 +12,13 @@ import (
 )
 
 type Client struct {
-	Token string
+	token string
+	login string
 	// default is "https://www.yuque.com/api/v2"
-	BaseURL string
+	baseURL string
 
 	// http request User-Agent
-	UserAgent string
+	userAgent string
 
 	User     *User
 	Document *Document
@@ -28,9 +29,9 @@ type Client struct {
 
 type clientOption func(*Client)
 
-func NewClient(token string, options ...clientOption) *Client {
+func NewClient(token string, options ...clientOption) (*Client, error) {
 	client := &Client{
-		Token: token,
+		token: token,
 	}
 
 	client.User = newUser(client)
@@ -42,12 +43,16 @@ func NewClient(token string, options ...clientOption) *Client {
 	for _, option := range options {
 		option(client)
 	}
-
-	if client.BaseURL == "" {
-		client.BaseURL = internal.BaseURL
+	if client.baseURL == "" {
+		client.baseURL = internal.BaseURL
 	}
+	user, err := client.User.GetInfo()
+	if err != nil {
+		return nil, err
+	}
+	client.login = user.Data.Login
 
-	return client
+	return client, nil
 }
 
 func (c *Client) SetOption(opts ...clientOption) {
@@ -56,15 +61,27 @@ func (c *Client) SetOption(opts ...clientOption) {
 	}
 }
 
+func WithToken(token string) clientOption {
+	return func(c *Client) {
+		c.token = token
+	}
+}
+
 func WithBaseURL(url string) clientOption {
 	return func(c *Client) {
-		c.BaseURL = url
+		c.baseURL = url
 	}
 }
 
 func WithUserAgent(userAgent string) clientOption {
 	return func(c *Client) {
-		c.UserAgent = userAgent
+		c.userAgent = userAgent
+	}
+}
+
+func WithLogin(login string) clientOption {
+	return func(c *Client) {
+		c.login = login
 	}
 }
 
@@ -110,7 +127,7 @@ func (c *Client) do(url string, options ...option) ([]byte, error) {
 		return nil, err
 	}
 
-	req.Header.Add("X-Auth-Token", c.Token)
+	req.Header.Add("X-Auth-Token", c.token)
 	req.Header.Add("Content-type", "application/json")
 	for k, v := range option.Headers {
 		req.Header.Set(k, v)

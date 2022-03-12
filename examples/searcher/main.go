@@ -12,7 +12,7 @@ const (
 
 func main() {
 	client := yuque.NewClient(token)
-	search, err := client.Search.Work("doc", "keyword", yuque.SearcherOption{Offset: 10})
+	search, err := client.Search.Work("keyword", yuque.SearcherOption{Kind: "doc", Offset: 10})
 	if err != nil {
 		panic(err)
 	}

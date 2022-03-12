@@ -42,7 +42,7 @@ func newDocument(c *Client) *Document {
 // ListAll list all documents in a repo
 func (d *Document) ListAll(namespace string) (*ResponseDocSerializer, error) {
 	var (
-		url      = fmt.Sprintf(d.BaseURL+internal.DocumentListPath, namespace)
+		url      = fmt.Sprintf(d.baseURL+internal.DocumentListPath, namespace)
 		document = ResponseDocSerializer{}
 	)
 
@@ -62,7 +62,7 @@ func (d *Document) ListAll(namespace string) (*ResponseDocSerializer, error) {
 // Get get document detail info
 func (d *Document) GetInfo(namespace, slug string) (*ResponseDocDetailSerializer, error) {
 	var (
-		url      = fmt.Sprintf(d.BaseURL+internal.DocumentGetPath, namespace, slug)
+		url      = fmt.Sprintf(d.baseURL+internal.DocumentGetPath, namespace, slug)
 		document = ResponseDocDetailSerializer{}
 	)
 
@@ -89,7 +89,7 @@ func (d *Document) Create(namespace string, options ...DocumentOption) (*Respons
 	}
 
 	var (
-		url      = fmt.Sprintf(d.BaseURL+internal.DocumentCreatePath, namespace)
+		url      = fmt.Sprintf(d.baseURL+internal.DocumentCreatePath, namespace)
 		document = ResponseDocDetailSerializer{}
 		body     = struct {
 			Slug   string `json:"slug"`
@@ -138,7 +138,7 @@ func (d *Document) Update(namespace, slug string, options ...DocumentOption) (*R
 		return nil, ErrGetDocumentID
 	}
 	var (
-		url      = fmt.Sprintf(d.BaseURL+internal.DocumentUpdatePath, namespace, documentID)
+		url      = fmt.Sprintf(d.baseURL+internal.DocumentUpdatePath, namespace, documentID)
 		document = ResponseDocDetailSerializer{}
 		body     = struct {
 			Slug     string `json:"slug"`
@@ -176,7 +176,7 @@ func (d *Document) Delete(namespace, slug string) (*ResponseDocDetailSerializer,
 	}
 
 	var (
-		url      = fmt.Sprintf(d.BaseURL+internal.DocumentDeletePath, namespace, documentID)
+		url      = fmt.Sprintf(d.baseURL+internal.DocumentDeletePath, namespace, documentID)
 		document = ResponseDocDetailSerializer{}
 	)
 
