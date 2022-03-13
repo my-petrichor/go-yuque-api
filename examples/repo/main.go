@@ -24,23 +24,23 @@ func main() {
 	fmt.Println(repo)
 }
 
-func ListAllUnderUser(client *yuque.Client) (*internal.ResponseBookSerializer, error) {
+func ListAllUnderUser(client *yuque.Client) (*yuque.ResponseBookSerializer, error) {
 	return client.Repo.ListAllUnderUser(login)
 }
 
-func ListAllUnderGroup(client *yuque.Client) (*internal.ResponseBookSerializer, error) {
+func ListAllUnderGroup(client *yuque.Client) (*yuque.ResponseBookSerializer, error) {
 	return client.Repo.ListAllUnderGroup(groupLogin)
 }
 
-func GetInfo(client *yuque.Client) (*internal.ResponseBookDetailSerializer, error) {
+func GetInfo(client *yuque.Client) (*yuque.ResponseBookDetailSerializer, error) {
 	return client.Repo.GetInfo(namespace)
 }
 
-func GetDir(client *yuque.Client) (*internal.ResponseBookDirectoryStructure, error) {
+func GetDir(client *yuque.Client) (*yuque.ResponseBookDirectoryStructure, error) {
 	return client.Repo.GetDir(namespace)
 }
 
-func CreateUnderUser(client *yuque.Client) (*internal.ResponseBookDetailSerializer, error) {
+func CreateUnderUser(client *yuque.Client) (*yuque.ResponseBookDetailSerializer, error) {
 	return client.Repo.CreateUnderUser(login, "newslugq", "Book", "newRepoName", yuque.RepoOption{
 		Description: "this is a test",
 	})

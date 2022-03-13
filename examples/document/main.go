@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	yuque "github.com/my-Sakura/go-yuque-api"
-	"github.com/my-Sakura/go-yuque-api/internal"
 )
 
 const (
@@ -14,8 +13,11 @@ const (
 )
 
 func main() {
-	client := yuque.NewClient(token)
-	document, err := ListAll(client)
+	client, err := yuque.NewClient("[token]")
+	if err != nil {
+		panic(err)
+	}
+	document, err := Create(client)
 	if err != nil {
 		panic(err)
 	}
@@ -23,15 +25,15 @@ func main() {
 	fmt.Println(document)
 }
 
-func ListAll(client *yuque.Client) (*internal.ResponseDocSerializer, error) {
+func ListAll(client *yuque.Client) (*yuque.ResponseDocSerializer, error) {
 	return client.Document.ListAll(namespace)
 }
 
-func GetInfo(client *yuque.Client) (*internal.ResponseDocDetailSerializer, error) {
+func GetInfo(client *yuque.Client) (*yuque.ResponseDocDetailSerializer, error) {
 	return client.Document.GetInfo(namespace, slug)
 }
 
-func Create(client *yuque.Client) (*internal.ResponseDocDetailSerializer, error) {
+func Create(client *yuque.Client) (*yuque.ResponseDocDetailSerializer, error) {
 	return client.Document.Create(namespace, yuque.DocumentOption{
 		Slug:   "slug",
 		Title:  "Title",
@@ -41,7 +43,7 @@ func Create(client *yuque.Client) (*internal.ResponseDocDetailSerializer, error)
 	})
 }
 
-func Update(client *yuque.Client) (*internal.ResponseDocDetailSerializer, error) {
+func Update(client *yuque.Client) (*yuque.ResponseDocDetailSerializer, error) {
 	return client.Document.Update(namespace, slug, yuque.DocumentOption{
 		Slug:     "newSlug",
 		Title:    "newTitle",
@@ -51,6 +53,6 @@ func Update(client *yuque.Client) (*internal.ResponseDocDetailSerializer, error)
 	})
 }
 
-func Delete(client *yuque.Client) (*internal.ResponseDocDetailSerializer, error) {
+func Delete(client *yuque.Client) (*yuque.ResponseDocDetailSerializer, error) {
 	return client.Document.Delete(namespace, slug)
 }

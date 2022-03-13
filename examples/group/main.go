@@ -23,23 +23,23 @@ func main() {
 	fmt.Println(group)
 }
 
-func ListAll(client *yuque.Client) (*internal.ResponseUserSerializer, error) {
+func ListAll(client *yuque.Client) (*yuque.ResponseUserSerializer, error) {
 	return client.Group.ListAll(login)
 }
 
-func ListPublic(client *yuque.Client) (*internal.ResponseUserSerializer, error) {
+func ListPublic(client *yuque.Client) (*yuque.ResponseUserSerializer, error) {
 	return client.Group.ListPublic()
 }
 
-func GetInfo(client *yuque.Client) (*internal.ResponseUserDetailSerializer, error) {
+func GetInfo(client *yuque.Client) (*yuque.ResponseUserDetailSerializer, error) {
 	return client.Group.GetInfo(groupLogin)
 }
 
-func GetMembers(client *yuque.Client) (*internal.ResponseGroupUserSerializer, error) {
+func GetMembers(client *yuque.Client) (*yuque.ResponseGroupUserSerializer, error) {
 	return client.Group.GetMembers(groupLogin)
 }
 
-func Create(client *yuque.Client) (*internal.ResponseUserDetailSerializer, error) {
+func Create(client *yuque.Client) (*yuque.ResponseUserDetailSerializer, error) {
 	return client.Group.Create("newGroupName", "newGroupLogin", yuque.GroupOption{
 		Login:       "newGroupLogin",
 		Name:        "newGroupName",
@@ -47,7 +47,7 @@ func Create(client *yuque.Client) (*internal.ResponseUserDetailSerializer, error
 	})
 }
 
-func Update(client *yuque.Client) (*internal.ResponseUserDetailSerializer, error) {
+func Update(client *yuque.Client) (*yuque.ResponseUserDetailSerializer, error) {
 	return client.Group.Update(groupLogin, yuque.GroupOption{
 		Login:       "newqwe",
 		Name:        "newGroupName",
@@ -55,11 +55,11 @@ func Update(client *yuque.Client) (*internal.ResponseUserDetailSerializer, error
 	})
 }
 
-func UpdateMember(client *yuque.Client) (*internal.ResponseGroupUserDetailSerializer, error) {
+func UpdateMember(client *yuque.Client) (*yuque.ResponseGroupUserDetailSerializer, error) {
 	return client.Group.UpdateMember(groupLogin, login, 0)
 }
 
-func Delete(client *yuque.Client) (*internal.ResponseUserDetailSerializer, error) {
+func Delete(client *yuque.Client) (*yuque.ResponseUserDetailSerializer, error) {
 	return client.Group.Delete(groupLogin)
 }
 
