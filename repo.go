@@ -56,9 +56,9 @@ func (r *Repo) ListAllUnderUser() (*ResponseBookSerializer, error) {
 }
 
 // ListAllUnderGroup list all repo under group
-func (r *Repo) ListAllUnderGroup() (*ResponseBookSerializer, error) {
+func (r *Repo) ListAllUnderGroup(groupLogin string) (*ResponseBookSerializer, error) {
 	var (
-		url  = fmt.Sprintf(r.baseURL+internal.RepoListAllUnderGroupPath, r.login)
+		url  = fmt.Sprintf(r.baseURL+internal.RepoListAllUnderGroupPath, groupLogin)
 		repo = ResponseBookSerializer{}
 	)
 
@@ -107,7 +107,6 @@ func (r *Repo) GetDir(namespace string) (*ResponseBookDirectoryStructure, error)
 		return nil, err
 	}
 
-	fmt.Println(string(respBody))
 	err = json.Unmarshal(respBody, &repo)
 	if err != nil {
 		return nil, err
@@ -214,7 +213,6 @@ func (r *Repo) Update(namespace string, options ...RepoOption) (*ResponseBookDet
 			Description string `json:"description"`
 			Type        string `json:"type"`
 			Public      int    `json:"public"`
-			Toc         string `json:"toc"`
 		}{
 			Name:        opt.Name,
 			Slug:        opt.Slug,
